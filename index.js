@@ -14,10 +14,6 @@ const { sendWelcomeMessage } = require('./src/modules/welcomeMessage');
 const { leaveMessage } = require('./src/modules/leaveMessage');
 const { customStatus } = require('./src/modules/customStatus');
 
-//music import
-const ytdl = require('ytdl-core');
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior } = require('@discordjs/voice');
-
 // Import the functions for each command
 const { pingCommand } = require('./src/commands/pingCommand')
 const { authorCommand } = require('./src/commands/authorCommand')
