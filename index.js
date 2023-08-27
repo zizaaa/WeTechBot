@@ -2,8 +2,7 @@ const {
     Client, 
     GatewayIntentBits, 
     ActivityType,
-    IntentsBitField,
-    EmbedBuilder
+    IntentsBitField
 } = require('discord.js');
 
 
@@ -17,6 +16,9 @@ const { customStatus } = require('./src/modules/customStatus');
 // Import the functions for each command
 const { pingCommand } = require('./src/commands/pingCommand')
 const { authorCommand } = require('./src/commands/authorCommand')
+
+//import event
+const { announcement } = require('./src/events/announcement')
 
 const client = new Client({
     intents: [
@@ -62,6 +64,14 @@ client.on('ready', () => {
     //goodbye message
     client.on('guildMemberRemove', (member) => {
         leaveMessage(member);
+    });
+
+    //send announcement
+    client.on('interactionCreate',(interaction)=>{
+        // Get the bot's icon (avatar)
+        const botIcon = client.user.displayAvatarURL();
+        
+        announcement(interaction,botIcon)
     });
 
 

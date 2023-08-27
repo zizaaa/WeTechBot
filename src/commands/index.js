@@ -9,6 +9,30 @@ const commands = [
     {
         name: 'ping',
         description: 'Replies with the bot ping!',
+    },
+    {
+        name:'message',
+        description:'Send message using wetech bot',
+        options:[
+            {
+                type: 3,
+                name: 'title',
+                description: 'Enter your title',
+                required: true
+            },
+            {
+                type: 3,
+                name: 'message',
+                description: 'Enter your message',
+                required: true
+            },
+            {
+                type:7,
+                name:'channel',
+                description: 'The channel where you want to send the announcement',
+                required: true
+            }
+        ]
     }
 ];
 
