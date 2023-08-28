@@ -15,7 +15,6 @@ const { EmbedBuilder } = require('discord.js');
         const isCommunityTechSupport = member.roles.cache.some(role => role.name === CommunityTechSupport);
 
         if (commandName === 'message') {
-            console.log(user)
             if(isAdmin || isModerator || isCommunityTechSupport){
                 const title = options.getString('title');
                 const message = options.getString('message');
@@ -42,7 +41,7 @@ const { EmbedBuilder } = require('discord.js');
             }else{
                 const embed = new EmbedBuilder()
                 .setColor('#03FA6E')
-                .setDescription("Seems like something might have gone wrong, or it's possible that you don't currently have the necessary permissions to use this command.");
+                .setDescription("You don't currently have the necessary permissions to use this command.");
                 interaction.reply({embeds:[embed]})
             }
         }

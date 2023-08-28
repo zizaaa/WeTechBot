@@ -2,7 +2,8 @@ const {
     Client, 
     GatewayIntentBits, 
     ActivityType,
-    IntentsBitField
+    IntentsBitField,
+    EmbedBuilder
 } = require('discord.js');
 
 
@@ -19,6 +20,7 @@ const { authorCommand } = require('./src/commands/authorCommand')
 
 //import event
 const { announcement } = require('./src/events/announcement')
+const { requestRole } = require('./src/events/requestRole')
 
 const client = new Client({
     intents: [
@@ -74,5 +76,9 @@ client.on('ready', () => {
         announcement(interaction,botIcon)
     });
 
+    //request role
+    client.on('interactionCreate', async (interaction) => {
+        await requestRole(interaction)
+    });
 
 client.login(mySecret);

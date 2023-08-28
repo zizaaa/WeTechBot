@@ -33,6 +33,30 @@ const commands = [
                 required: true
             }
         ]
+    },
+    {
+        name:'role',
+        description:'Set your desired role',
+        options:[
+            {
+                type: 3,
+                name: 'role',
+                description: 'Role title',
+                required: true
+            }
+        ]
+    },
+    {
+        name:'approve',
+        description:'Approve pending roles',
+        options:[
+            {
+                type: 3,
+                name: 'approve',
+                description: 'Input the number of role',
+                required: true
+            }
+        ]
     }
 ];
 
