@@ -52,7 +52,19 @@ const commands = [
         options:[
             {
                 type: 3,
-                name: 'approve',
+                name: 'number',
+                description: 'Input the number of role',
+                required: true
+            }
+        ]
+    },
+    {
+        name:'disapprove',
+        description:'Remove pending roles',
+        options:[
+            {
+                type: 3,
+                name: 'number',
                 description: 'Input the number of role',
                 required: true
             }
