@@ -12,7 +12,7 @@ function leaveMessage(member) {
             .setDescription(`Sad to see you go from ${serverName}. Keep coding and stay geeky!`)
             .setThumbnail(userAvatar)
             .setImage('https://media.tenor.com/pRTPXrxI2UAAAAAM/crying-meme-black-guy-cries.gif');
-        
+            
         goodbyeChannel.send({ embeds: [embed] });
     }
 }

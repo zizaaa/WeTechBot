@@ -22,6 +22,10 @@ function customStatus(){
             name:'Vivamax 🎥',
             type:ActivityType.Watching
         },
+        {
+            name:'WeTech Server',
+            type:ActivityType.Watching
+        }
     ];
 
     const random = Math.floor(Math.random()*status.length)

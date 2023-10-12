@@ -17,6 +17,15 @@ function sendWelcomeMessage(member) {
     }
 }
 
+// Function to send a private welcome message to the user
+function sendPrivateWelcomeMessage(member) {
+    const serverName = member.guild.name;
+
+    // Send a private welcome message to the user
+    member.send(`Hello and welcome! I'm the ${serverName} bot, created by server admins to assist you in WeTech. Please complete the onboarding process to access valuable server resources. Thank you!`);
+}
+
 module.exports = {
-    sendWelcomeMessage
+    sendWelcomeMessage,
+    sendPrivateWelcomeMessage
 };

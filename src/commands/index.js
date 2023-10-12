@@ -11,15 +11,9 @@ const commands = [
         description: 'Replies with the bot ping!',
     },
     {
-        name:'message',
-        description:'Send message using wetech bot',
+        name:'server-announcement',
+        description:'Send announcement using wetech bot',
         options:[
-            {
-                type: 3,
-                name: 'title',
-                description: 'Enter your title',
-                required: true
-            },
             {
                 type: 3,
                 name: 'message',
@@ -69,7 +63,26 @@ const commands = [
                 required: true
             }
         ]
+    },
+    {
+        name: 'report',
+        description: 'Report a user',
+        options: [
+            {
+                type: 6,
+                name: 'user',
+                description: 'Mention the user you want to report',
+                required: true,
+            },
+            {
+                type: 3,
+                name: 'reason',
+                description: 'The reason for the report',
+                required: true,
+            },
+        ],
     }
+    
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
