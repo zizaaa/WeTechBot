@@ -12,57 +12,11 @@ const commands = [
     },
     {
         name:'server-announcement',
-        description:'Send announcement using wetech bot',
-        options:[
-            {
-                type: 3,
-                name: 'message',
-                description: 'Enter your message',
-                required: true
-            },
-            {
-                type:7,
-                name:'channel',
-                description: 'The channel where you want to send the announcement',
-                required: true
-            }
-        ]
+        description:'Send announcement using wetech bot'
     },
     {
-        name:'role',
-        description:'Set your desired role',
-        options:[
-            {
-                type: 3,
-                name: 'role',
-                description: 'Role title',
-                required: true
-            }
-        ]
-    },
-    {
-        name:'approve',
-        description:'Approve pending roles',
-        options:[
-            {
-                type: 3,
-                name: 'number',
-                description: 'Input the number of role',
-                required: true
-            }
-        ]
-    },
-    {
-        name:'disapprove',
-        description:'Remove pending roles',
-        options:[
-            {
-                type: 3,
-                name: 'number',
-                description: 'Input the number of role',
-                required: true
-            }
-        ]
+        name: 'request-roles',
+        description: 'Display pending request roles',
     },
     {
         name: 'report',
@@ -81,6 +35,10 @@ const commands = [
                 required: true,
             },
         ],
+    },
+    {
+        name:'wetech-portal',
+        description:'Enroll for our free online tutorials'
     }
     
 ];

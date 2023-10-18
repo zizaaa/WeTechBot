@@ -10,11 +10,10 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const mySecret = process.env['TOKEN'] || process.env.TOKEN;
 const uri = process.env.URI;
+const guild = process.env.GUILD_ID
 
-const { sendWelcomeMessage, sendPrivateWelcomeMessage } = require('./src/modules/welcomeMessage');
-const { leaveMessage } = require('./src/modules/leaveMessage');
-const { customStatus } = require('./src/modules/customStatus');
-const { introduce } = require('./src/modules/introduce')
+//models
+const enrollment = require('./src/model/enrollmentModel')
 
 // Import the functions for each command
 const { pingCommand } = require('./src/commands/pingCommand');
@@ -22,9 +21,39 @@ const { authorCommand } = require('./src/commands/authorCommand');
 const { reportCommand } = require('./src/commands/reportCommand');
 
 //import modules
-const { announcement } = require('./src/modules/announcement');
-const { requestRole } = require('./src/modules/requestRole');
-const { reports } = require('./src/modules/reports')
+const { announceModal } = require('./src/modules/announcement/announceModal');
+const { processAnnouncement } = require('./src/modules/announcement/processAnnouncement');
+
+const { reports } = require('./src/modules/reports');
+const { sendWelcomeMessage, sendPrivateWelcomeMessage } = require('./src/modules/welcomeMessage');
+const { leaveMessage } = require('./src/modules/leaveMessage');
+const { customStatus } = require('./src/modules/customStatus');
+const { introduce } = require('./src/modules/introduce');
+
+const { enrollmentModal } = require('./src/modules/portal/enrollmentModal');
+const { otpModal } = require('./src/modules/portal/otp/otpModal');
+const { otpValidation } = require('./src/modules/portal/otp/otpValidation');
+const { resendOTP } = require('./src/modules/portal/otp/resendOTP');
+const { resendOTPValidation } = require('./src/modules/portal/otp/resendOTPValidation');
+const { profile } = require('./src/modules/portal/profile');
+const { enrollmentEmailVerification } = require('./src/modules/portal/enrollmentEmailVerification');
+const { cancelEnrollment } = require('./src/modules/portal/cancelEnrollment')
+
+const { homeInteraction } = require('./src/modules/portal/interactionsModules/homeInteraction')
+const { enrolledInteractions } = require('./src/modules/portal/interactionsModules/enrolledInteractions')
+const { pendingInteraction } = require('./src/modules/portal/interactionsModules/pendingInteraction')
+const { unverifiedInteraction } = require('./src/modules/portal/interactionsModules/unverifiedInteraction')
+const { courses } = require('./src/modules/portal/interactionsModules/courses')
+
+const { roleModal } = require('./src/modules/roles/roleModal')
+const { roleModalLogic } = require('./src/modules/roles/roleModalLogic')
+const { roleApproval } = require('./src/modules/roles/roleApproval');
+const { roles } = require('./src/modules/roles/roles');
+const { roleApprovalModal } = require('./src/modules/roles/roleApprovalModal')
+
+const {auth} = require('./src/modules/auth')
+
+const { enrollmentApproval } = require('./src/modules/portal/admin/enrollmentApproval')
 
 const client = new Client({
     intents: [
@@ -52,6 +81,43 @@ client.on('ready', () => {
 
     client.on('interactionCreate', async (interaction) => {
         if (!interaction.isChatInputCommand()) return;
+        
+        //announcement
+        if(interaction.commandName === 'server-announcement'){
+            if(auth(interaction)){
+                // await announcement(interaction)
+                await announceModal(interaction)
+            }else{
+                await interaction.reply({
+                    embeds:[
+                        {
+                            description:'You don\'t have permission to use this feature.'
+                        }
+                    ],
+                    ephemeral: true
+                })
+                return;
+            }
+            
+        }
+
+        //request role
+        if(interaction.commandName === 'request-roles'){
+            if(auth(interaction)){
+                await roles(interaction,client,EmbedBuilder)
+            }else{
+                await interaction.reply({
+                    embeds:[
+                        {
+                            description:'You don\'t have permission to use this feature.'
+                        }
+                    ],
+                    ephemeral: true
+                })
+                return;
+            }
+            
+        }
 
         if (interaction.commandName === 'ping') {
             await pingCommand(client, interaction);
@@ -64,13 +130,118 @@ client.on('ready', () => {
         if (interaction.commandName === 'report') {
             await reportCommand(client, interaction);
         }
+
+        if(interaction.commandName === 'wetech-portal'){
+            const userId = interaction.user.id
+            const data = await enrollment.findOne({userId})
+
+                if(!data){
+                    await homeInteraction(interaction, EmbedBuilder)
+                }else if(data && data.status === 'Pending'){
+                    await pendingInteraction(interaction, EmbedBuilder, 'reply');
+                }else if(data && data.status === 'Unverified'){
+                    await unverifiedInteraction(interaction, EmbedBuilder, 'reply');
+                }else if(data && data.status === 'Approved'){
+                    await enrolledInteractions(interaction, EmbedBuilder, data)
+                }
+        }
     });
 
     client.on('interactionCreate', async (interaction) => {
         if (!interaction.isButton()) return;
 
-        await reports(client, interaction)
+        const customId = interaction.customId;
+        //request role button
+        if(customId === 'request_role_button'){
+            await roleModal(interaction)
+        }
+        //role approval
+        if(customId === 'approve_role_button' || customId === 'disapprove_role_button'){
+
+            if(auth(interaction)){
+                await roleApprovalModal(interaction)
+            }else{
+                await interaction.reply({
+                    embeds:[
+                        {
+                            description:'You don\'t have permission to use this feature.'
+                        }
+                    ],
+                    ephemeral: true
+                })
+                return;
+            }
+        }
+        //report btn
+        if(customId.startsWith('approve_report_') || customId.startsWith('disapprove_report_')){
+            await reports(client, interaction)
+        }
+        //enroll buton
+        if(customId.startsWith('enroll_button')){
+            await courses(interaction,EmbedBuilder)
+        }
+        //course
+        if(customId.startsWith('course_button_')){
+            await enrollmentModal(interaction)
+        }
+
+        if(customId === 'profile_button'){
+            // await profile(client, interaction)
+            console.log('profile')
+        }
+
+        //otp button
+        if(customId === 'otp_button'){
+            await otpModal(interaction)
+        }
+
+        //resend otp
+        if(customId === 'resend_otp_button'){
+            await resendOTP(interaction)
+        }
+
+        //enrollment approval
+        if(customId.startsWith('approved_enrollment_') || customId.startsWith('disapproved_enrollment_')){
+            await enrollmentApproval(client,interaction, EmbedBuilder)
+        }
+
+        //cancel enrollment form
+        if(customId.startsWith('cancel_button_')){
+            await cancelEnrollment(client,interaction, EmbedBuilder)
+        }
+
     });
+
+    //enrollment event
+    client.on('interactionCreate', async(interaction)=>{
+        if (!interaction.isModalSubmit()) return;
+
+        if (interaction.customId === 'announcement_form') {
+            await processAnnouncement(interaction)
+        }
+
+        if (interaction.customId === 'reuqest_role_form') {
+            await roleModalLogic(interaction,EmbedBuilder)
+        }
+
+        if (interaction.customId.startsWith('request_role_')) {
+            await roleApproval(interaction,EmbedBuilder)
+        }
+        
+        if (interaction.customId.startsWith('enrollment_form_')) {
+            await enrollmentEmailVerification(interaction)
+        }
+
+        if(interaction.customId === 'otp_form'){
+            await otpValidation(client, interaction)
+        }
+
+        if(interaction.customId === 'resend_otp_form'){
+
+            await resendOTPValidation(interaction)
+            
+        }
+    })
     
 
     //welcome message
@@ -97,15 +268,6 @@ client.on('ready', () => {
         leaveMessage(member);
     });
 
-    //send announcement
-    client.on('interactionCreate',(interaction)=>{
-        announcement(interaction)
-    });
-
-    //request role
-    client.on('interactionCreate', async (interaction) => {
-        await requestRole(interaction)
-    });
 
     //channel id for introduce your self
     const introduceYourselfChannelId = '1142757176356642827'
