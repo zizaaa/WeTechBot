@@ -27,7 +27,7 @@ async function roleModalLogic(interaction,EmbedBuilder){
     const rolesFromDB = await rolesRequest.find()
 
     // Display the list of pending roles
-    const pendingRolesList = rolesFromDB.map((request, index) => `${index + 1}. \`${request.role}\` -> requested by \`${request.user.globalName}\` -> status: \`${request.status}\``);
+    const pendingRolesList = rolesFromDB.map((request, index) => `${index + 1}. \`${request.role}\` -> requested by <@${request.user.id}> -> status: \`${request.status}\``);
 
     const rolesEmbed = new EmbedBuilder()
     .setTitle('Role Requests')

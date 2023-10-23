@@ -3,14 +3,6 @@ const { REST,Routes } = require('discord.js');
 
 const commands = [
     {
-        name: 'author',
-        description: "Learn more about my origins and my creator's mission for our community!",
-    },
-    {
-        name: 'ping',
-        description: 'Replies with the bot ping!',
-    },
-    {
         name:'server-announcement',
         description:'Send announcement using wetech bot'
     },

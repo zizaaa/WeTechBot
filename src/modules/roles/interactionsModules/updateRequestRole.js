@@ -1,6 +1,6 @@
 async function updateRequestRole(data,interaction,EmbedBuilder){
 
-    const pendingRolesList = data.map((request, index) => `${index + 1}. \`${request.role}\` -> requested by \`${request.user.globalName}\` -> status: \`${request.status}\``);
+    const pendingRolesList = data.map((request, index) => `${index + 1}. \`${request.role}\` -> requested by <@${request.user.id}> -> status: \`${request.status}\``);
 
     const rolesEmbed = new EmbedBuilder()
     .setTitle('Role Requests')

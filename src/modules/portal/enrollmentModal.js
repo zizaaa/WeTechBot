@@ -3,7 +3,7 @@ const { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = req
 async function enrollmentModal(interaction){
     const [action, course] = interaction.customId.split('_button_');
     // Create the modal
-    let newCourse = course === 'web' ? 'Web Dev':course === 'c++' ? 'C++':course === 'python' ? 'Python':''
+    let newCourse = course === 'web' ? 'Web Dev':course === 'c++' ? 'C++':course === 'python' ? 'Python':course === 'java' ? 'Java':''
 	const modal = new ModalBuilder()
         .setCustomId(`enrollment_form_${course}`)
         .setTitle(`${newCourse} Course Enrollment`);
@@ -50,7 +50,7 @@ async function enrollmentModal(interaction){
     const birthDateInput = new TextInputBuilder()
         .setCustomId('user_birthDate')
         .setLabel('Birthdate')
-        .setPlaceholder('MM/DD/YY')
+        .setPlaceholder('MM/DD/YYYY')
         .setStyle(TextInputStyle.Short)
         .setRequired(true);
 

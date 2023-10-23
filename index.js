@@ -8,7 +8,7 @@ const {
 const mongoose = require('mongoose');
 
 require('dotenv').config();
-const mySecret = process.env['TOKEN'] || process.env.TOKEN;
+const mySecret = process.env.TOKEN;
 const uri = process.env.URI;
 const guild = process.env.GUILD_ID
 
@@ -16,8 +16,6 @@ const guild = process.env.GUILD_ID
 const enrollment = require('./src/model/enrollmentModel')
 
 // Import the functions for each command
-const { pingCommand } = require('./src/commands/pingCommand');
-const { authorCommand } = require('./src/commands/authorCommand');
 const { reportCommand } = require('./src/commands/reportCommand');
 
 //import modules
@@ -119,14 +117,6 @@ client.on('ready', () => {
             
         }
 
-        if (interaction.commandName === 'ping') {
-            await pingCommand(client, interaction);
-        } 
-        
-        if (interaction.commandName === 'author') {
-            await authorCommand(client, interaction);
-        }
-
         if (interaction.commandName === 'report') {
             await reportCommand(client, interaction);
         }
@@ -185,9 +175,9 @@ client.on('ready', () => {
             await enrollmentModal(interaction)
         }
 
-        if(customId === 'profile_button'){
-            // await profile(client, interaction)
-            console.log('profile')
+        if(customId.startsWith('profile_button_')){
+            console.log(interaction)
+            await profile(client, interaction)
         }
 
         //otp button

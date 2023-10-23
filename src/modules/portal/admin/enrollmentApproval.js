@@ -106,7 +106,7 @@ async function enrollmentApproval(client, interaction,EmbedBuilder){
     
                 const embed = new EmbedBuilder()
                 .setTitle(`Welcome, ${user.username}!`)
-                .setDescription(`We are delighted to welcome you to WeTech. Here are your credentials for accessing the WeTech Portal for the course '${course}':\n\n**Username**: \`\`\`${username}\`\`\`\n**Password**: \`\`\`${password}\`\`\``)
+                .setDescription(`We are delighted to welcome you to WeTech. Here are your credentials for accessing the WeTech Portal for the course '${data.course}':\n\n**Username**: \`\`\`${username}\`\`\`\n**Password**: \`\`\`${password}\`\`\``)
                 .setImage('https://i.imgur.com/z7FCU1X.png')
                 .setColor(0x56F387);
     
@@ -128,6 +128,8 @@ async function enrollmentApproval(client, interaction,EmbedBuilder){
 
                 return;
             })
+
+            return;
         }else if(action === 'disapproved' && data.status === 'Pending'){
             await data.deleteOne({_id:dataId})
 
@@ -166,6 +168,31 @@ async function enrollmentApproval(client, interaction,EmbedBuilder){
                 embeds:[embed]
             })
 
+            return;
+        }else{
+            await interaction.update({
+                embeds:[
+                    {
+                        title: 'Enrollment Approval',
+                        "description": "The issue has been successfully resolved.",
+                        color: 0x56F387, // Light green color
+                    }
+                ],
+                components: [
+                    {
+                        type: 1, // ACTION_ROW
+                        components: [
+                            {
+                                type: 2, // BUTTON
+                                style: 4,
+                                label: 'Resolved',
+                                custom_id: `enrollment_${data._id}`,
+                                disabled:true
+                            }
+                        ],
+                    },
+                ],
+            })
             return;
         }
 

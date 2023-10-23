@@ -72,7 +72,7 @@ async function roleApproval(interaction){
         await interaction.reply({
             embeds:[
                 {
-                    description:'This request is already resolved'
+                    description:`This request is already ${newrequestInfo.status}`
                 }
             ],
             ephemeral: true
@@ -99,8 +99,9 @@ async function roleApproval(interaction){
             });
         }
 
-        const requester = guild.members.cache.get(newrequestInfo.user.id);
-
+        const requester = await guild.members.fetch(newrequestInfo.user.id);
+        console.log(newrequestInfo.user.id)
+        console.log(requester)
         if (requester) {
             await requester.roles.add(role);
             requestInfo.status = '✔️ Approved'

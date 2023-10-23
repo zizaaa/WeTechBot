@@ -35,10 +35,10 @@ async function courses(interaction,EmbedBuilder){
                         },
                         {
                             type: 2, 
-                            style: 2,
+                            style: 3,
                             label: 'Java',
                             custom_id:'course_button_java',
-                            disabled:true
+                            disabled:false
                         },
                     ],
                 },
