@@ -27,12 +27,7 @@ const commands = [
                 required: true,
             },
         ],
-    },
-    {
-        name:'wetech-portal',
-        description:'Enroll for our free online tutorials'
     }
-    
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
